@@ -1,4 +1,5 @@
 ﻿@model List<HRManagementAppFrontEnd.Models.RegisterStaffDto>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
     ViewData["ShowMenu"] = true;
@@ -206,6 +207,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
+            const baseUrl = '@Configuration["BaseUrl"]';
             $(document).ready(function () {
                 // Handle file upload for editing staff
                 $('input[name="Photo"]').change(function (event) {
@@ -245,7 +247,7 @@
                     console.log("Data being sent to API:", formData);
 
                     $.ajax({
-                        url: 'https://localhost:7287/api/update/' + id, // Build the correct URL
+                        url: baseUrl + '/api/update/' + id, // Build the correct URL
                         type: 'PUT', // Change to PUT for update
                         data: JSON.stringify(formData), // Send as JSON
                         contentType: 'application/json', // Set the content type to application/json
@@ -273,12 +275,8 @@
                         StaffAccessCode: $('input[name="StaffAccessCode"]').val()
                     };
 
-                    // Log the data being sent for debugging
-                    console.log("Adding new staff data:", formData);
-
-                    console.log("About to send request for adding staff");
                     $.ajax({
-                        url: 'https://localhost:7287/api/register',
+                        url: baseUrl + '/api/register',
                         type: 'POST',
                         data: JSON.stringify(formData), // Send as JSON
                         contentType: 'application/json', // Set the content type to application/json

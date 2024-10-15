@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HRManagementAppFrontEnd.Models;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace HRManagementAppFrontEnd.Controllers
 {
     public class AdminController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly string _baseUrl;
 
-        public AdminController(HttpClient httpClient)
+        public AdminController(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _baseUrl = configuration["BaseUrl"];
         }
 
         public IActionResult Login()
@@ -23,7 +22,7 @@ namespace HRManagementAppFrontEnd.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/admin/login", model);
+            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/api/admin/login", model);
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("SuccessfulRequests");

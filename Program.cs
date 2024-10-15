@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<HomeController>();
 builder.Services.AddHttpClient<AdminController>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 
 var app = builder.Build();
@@ -20,6 +21,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
