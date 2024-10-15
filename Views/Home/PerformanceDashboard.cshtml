@@ -37,38 +37,3 @@
         </div>
     </div>
 </div>
-
-<!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    var ctx = document.getElementById('requestChart').getContext('2d');
-    var requestChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Total Requests', 'Successful Requests', 'Failed Requests'],
-            datasets: [{
-                label: 'API Requests',
-                data: [@Model.TotalRequests, @Model.SuccessfulRequests, @Model.FailedRequests],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)'
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
