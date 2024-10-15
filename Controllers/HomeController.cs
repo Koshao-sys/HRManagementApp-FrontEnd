@@ -6,10 +6,12 @@ namespace HRManagementAppFrontEnd.Controllers
     public class HomeController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly string _baseUrl;
 
-        public HomeController(HttpClient httpClient)
+        public HomeController(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _baseUrl = configuration["BaseUrl"];
         }
 
         public IActionResult Index()
@@ -19,7 +21,7 @@ namespace HRManagementAppFrontEnd.Controllers
 
         public async Task<IActionResult> Register()
         {
-            var response = await _httpClient.GetAsync("https://localhost:7287/api/retrieval");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/api/retrieval");
             if (response.IsSuccessStatusCode)
             {
                 var staffList = await response.Content.ReadFromJsonAsync<List<RegisterStaffDto>>();
@@ -28,30 +30,25 @@ namespace HRManagementAppFrontEnd.Controllers
             return View(new List<RegisterStaffDto>());
         }
 
-        // Updated Edit Method
         public async Task<IActionResult> Edit(int id)
         {
-            // Fetch the specific staff member by ID
-            var response = await _httpClient.GetAsync($"https://localhost:7287/api/retrieval/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/api/retrieval/{id}");
             RegisterStaffDto staffToEdit = null;
 
             if (response.IsSuccessStatusCode)
             {
                 staffToEdit = await response.Content.ReadFromJsonAsync<RegisterStaffDto>();
-                ViewBag.EditStaff = staffToEdit; // Store the staff to be edited in ViewBag
+                ViewBag.EditStaff = staffToEdit;
             }
 
-            // Fetch all staff members to display in the list
             var allStaffResponse = await _httpClient.GetAsync("https://localhost:7287/api/retrieval");
             if (allStaffResponse.IsSuccessStatusCode)
             {
                 var allStaff = await allStaffResponse.Content.ReadFromJsonAsync<List<RegisterStaffDto>>();
-                return View("Register", allStaff); // Return the Register view with all staff
+                return View("Register", allStaff);
             }
 
-            return RedirectToAction("Register"); // Handle error case
+            return RedirectToAction("Register");
         }
-
-
     }
 }
