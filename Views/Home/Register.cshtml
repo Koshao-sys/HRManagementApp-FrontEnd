@@ -1,0 +1,300 @@
+﻿@model List<HRManagementAppFrontEnd.Models.RegisterStaffDto>
+
+@{
+    ViewData["ShowMenu"] = true;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <title>Registered Staff</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #007bff;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="text-center">Registered Staff</h2>
+
+        @if (ViewBag.EditStaff != null)
+        {
+            var staffToEdit = (HRManagementAppFrontEnd.Models.RegisterStaffDto)ViewBag.EditStaff; // Cast to RegisterStaffDto
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Edit Staff Information</h5>
+                </div>
+                <div class="card-body">
+                    <form id="editStaffForm" enctype="multipart/form-data">
+                        <input type="hidden" name="Id" value="@staffToEdit.Id" />
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Surname</label>
+                                <input type="text" name="Surname" class="form-control" value="@staffToEdit.Surname" readonly />
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Other Names</label>
+                                <input type="text" name="OtherNames" class="form-control" value="@staffToEdit.OtherNames" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Date of Birth</label>
+                                <input type="date" name="DateOfBirth" class="form-control" value="@staffToEdit.DateOfBirth.ToString("yyyy-MM-dd")" />
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Photo</label>
+                                <input type="file" name="Photo" class="form-control" />
+                                <small>Leave blank if not updating.</small>
+                                <input type="hidden" name="PhotoBase64" id="PhotoBase64Edit" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="updateButton">Update</button>
+                            <a href="@Url.Action("Register", "Home")" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5>Staff List</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#addStaffModal">
+                        <i class="fas fa-plus"></i> Add New Staff
+                    </button>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Surname</th>
+                            <th>Other Names</th>
+                            <th>Date of Birth</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Surname</td>
+                                <td>@user.OtherNames</td>
+                                <td>@user.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Home", new { id = user.Id })" class="btn btn-warning">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding New Staff -->
+    <div class="modal fade" id="addStaffModal" tabindex="-1" role="dialog" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addStaffModalLabel">Add New Staff</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="addStaffForm" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="surname">Surname</label>
+                                <input type="text" class="form-control" id="surname" name="Surname" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="otherNames">Other Names</label>
+                                <input type="text" class="form-control" id="otherNames" name="OtherNames" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" class="form-control" id="dateOfBirth" name="DateOfBirth" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="staffAccessCode">Staff Access Code</label>
+                                <input type="number" placeholder="10-Digits" class="form-control" id="staffAccessCode" name="StaffAccessCode" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="photo">Photo</label>
+                            <input type="file" class="form-control" id="photo" name="Photo" />
+                            <small class="form-text text-muted">Leave blank if not uploading a new photo.</small>
+                            <input type="hidden" name="PhotoBase64" id="PhotoBase64Add" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Staff</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Handle file upload for editing staff
+                $('input[name="Photo"]').change(function (event) {
+                    var file = event.target.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            // Set the Base64 string in the hidden input field
+                            $('#PhotoBase64Edit').val(e.target.result.split(',')[1]); // Store only the base64 part
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Handle file upload for adding staff
+                $('#photo').change(function (event) {
+                    var file = event.target.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            // Set the Base64 string in the hidden input field
+                            $('#PhotoBase64Add').val(e.target.result.split(',')[1]); // Store only the base64 part
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                $('#updateButton').click(function () {
+                    var id = $('input[name="Id"]').val(); // Get the Id
+                    // Create a JSON object instead of using FormData
+                    var formData = {
+                        DateOfBirth: new Date($('input[name="DateOfBirth"]').val()).toISOString().split('T')[0],
+                        Photo: $('#PhotoBase64Edit').val(),
+                    };
+
+                    // Log the data being sent for debugging
+                    console.log("Data being sent to API:", formData);
+
+                    $.ajax({
+                        url: 'https://localhost:7287/api/update/' + id, // Build the correct URL
+                        type: 'PUT', // Change to PUT for update
+                        data: JSON.stringify(formData), // Send as JSON
+                        contentType: 'application/json', // Set the content type to application/json
+                        success: function (response) {
+                            alert("Staff information updated successfully!");
+                            location.reload(); // Reload the page to see the updated data
+                        },
+                        error: function (xhr) {
+                            alert("An error occurred: " + xhr.responseText);
+                        }
+                    });
+                });
+
+
+                // Handle adding new staff
+                $('#addStaffForm').submit(function (event) {
+                    event.preventDefault();
+
+                    // Create a JSON object to hold staff data
+                    var formData = {
+                        Surname: $('input[name="Surname"]').val(),
+                        OtherNames: $('input[name="OtherNames"]').val(),
+                        DateOfBirth: new Date($('input[name="DateOfBirth"]').val()).toISOString().split('T')[0],
+                        Photo: $('#PhotoBase64Add').val(), // Base64 photo
+                        StaffAccessCode: $('input[name="StaffAccessCode"]').val()
+                    };
+
+                    // Log the data being sent for debugging
+                    console.log("Adding new staff data:", formData);
+
+                    console.log("About to send request for adding staff");
+                    $.ajax({
+                        url: 'https://localhost:7287/api/register',
+                        type: 'POST',
+                        data: JSON.stringify(formData), // Send as JSON
+                        contentType: 'application/json', // Set the content type to application/json
+                        success: function (response) {
+                            alert("New staff added successfully!");
+                            $('#addStaffModal').modal('hide');
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            alert("An error occurred: " + xhr.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+
+    }
+</body>
+</html>

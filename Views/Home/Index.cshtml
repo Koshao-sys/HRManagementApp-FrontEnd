@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    ViewData["ShowMenu"] = false;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            background-color: #f4f7fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .btn {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .fa {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Welcome to the HR Management System</h2>
+
+    <div class="button-container">
+        <a href="/Home/Register" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Register
+        </a>
+        <a href="/Admin/Login" class="btn btn-secondary">
+            <i class="fas fa-lock"></i> Admin Login
+        </a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
